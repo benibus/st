@@ -7,6 +7,7 @@
  */
 static char *font = "DroidSansMonoSlashed Nerd Font:pixelsize=12:antialias=true:autohint=true";
 static int borderpx = 2;
+char *externalpipe_sigusr1[] = {"/bin/sh", "-c", "extpipe-buffer.sh st_strings_read"};
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -166,6 +167,10 @@ static unsigned int defaultattr = 11;
  */
 static uint forcemousemod = ShiftMask;
 
+/* Commands */
+static char *copyoutput[] = { "/bin/sh", "-c", "copyoutput.sh", "externalpipe", NULL };
+static char *editoutput[] = { "/bin/sh", "-c", "editoutput.sh", "externalpipe", NULL };
+
 /*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
@@ -206,6 +211,8 @@ static Shortcut shortcuts[] = {
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
 	{ ShiftMask,           	XF86XK_Forward, kscrollup,      {.i = -1} },
 	{ ShiftMask,           	XF86XK_Back,   	kscrolldown,    {.i = -1} },
+	{ MODKEY,            	XK_c,           externalpipe,   {.v = copyoutput } },
+	{ MODKEY,            	XK_e,           externalpipe,   {.v = editoutput } },
 };
 
 /*
