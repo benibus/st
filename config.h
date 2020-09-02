@@ -215,6 +215,7 @@ static Shortcut shortcuts[] = {
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
 	{ ShiftMask,           	XF86XK_Forward, kscrollup,      {.i = -1} },
 	{ ShiftMask,           	XF86XK_Back,   	kscrolldown,    {.i = -1} },
+	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
 	{ MODKEY,            	XK_c,           externalpipe,   {.v = copyoutput } },
 	{ MODKEY,            	XK_e,           externalpipe,   {.v = editoutput } },
 };
