@@ -113,27 +113,27 @@ float alpha = 0.94, alphaUnfocused = 0.93;
 static const char *colorname[] = {
   /* 8 normal colors */
   [0] = "#05050A", /* black   */
-  [1] = "#9a2037", /* red     */
-  [2] = "#1d655e", /* green   */
-  [3] = "#BF9F5F", /* yellow  */
-  [4] = "#405871", /* blue    */
-  [5] = "#655D91", /* magenta */
-  [6] = "#4E859D", /* cyan    */
-  [7] = "#AAB6C7", /* white   */
+  [1] = "#6E313D", /* red     */
+  [2] = "#205A55", /* green   */
+  [3] = "#877658", /* yellow  */
+  [4] = "#364C5E", /* blue    */
+  [5] = "#5B4B66", /* magenta */
+  [6] = "#3B6873", /* cyan    */
+  [7] = "#94A1BC", /* white   */
 
   /* 8 bright colors */
-  [8]  = "#4B5867", /* black   */
-  [9]  = "#a9263f", /* red     */
-  [10] = "#20806d", /* green   */
-  [11] = "#D7B36B", /* yellow  */
-  [12] = "#506D8D", /* blue    */
-  [13] = "#796FAD", /* magenta */
-  [14] = "#5896B1", /* cyan    */
-  [15] = "#BCC9DC", /* white   */
+  [8]  = "#3F4C5C", /* black   */
+  [9]  = "#843E4A", /* red     */
+  [10] = "#246C69", /* green   */
+  [11] = "#988F65", /* yellow  */
+  [12] = "#425E73", /* blue    */
+  [13] = "#65597D", /* magenta */
+  [14] = "#467784", /* cyan    */
+  [15] = "#A8B7D5", /* white   */
 
   /* special colors */
   [256] = "#05050A", /* background */
-  [257] = "#B5C2D4", /* foreground */
+  [257] = "#99A7C2", /* foreground */
 };
 
 
@@ -222,8 +222,9 @@ ResourcePref resources[] = {
 };
 
 /* Commands */
-static char *copyoutput[] = { "/bin/sh", "-c", "copyoutput.sh", "externalpipe", NULL };
-static char *editoutput[] = { "/bin/sh", "-c", "editoutput.sh", "externalpipe", NULL };
+static char *pipecopy[]  = { "/bin/sh", "-c", "termpipe-copy",  "externalpipe", NULL };
+static char *pipedump[]  = { "/bin/sh", "-c", "termpipe-dump",  "externalpipe", NULL };
+static char *pipedebug[] = { "/bin/sh", "-c", "termpipe-debug", "externalpipe", NULL };
 
 /*
  * Internal mouse shortcuts.
@@ -246,28 +247,29 @@ static MouseShortcut mshortcuts[] = {
 
 #include <X11/XF86keysym.h>
 static Shortcut shortcuts[] = {
-	/* mask            keysym          function        argument */
-	{ XK_ANY_MOD,      XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,     XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,       XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,      XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,         XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,         XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,         XK_Home,        zoomreset,      {.f =  0} },
-	{ MODKEY,          XK_y,           clipcopy,       {.i =  0} },
-	{ MODKEY,          XK_p,           clippaste,      {.i =  0} },
-	{ TERMMOD,         XK_P,           selpaste,       {.i =  0} },
-	{ ShiftMask,       XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,         XK_Num_Lock,    numlock,        {.i =  0} },
-	{ TERMMOD,         XK_K,           kscrollup,      {.i =  4} },
-	{ TERMMOD,         XK_J,           kscrolldown,    {.i =  4} },
-	{ ShiftMask,       XK_Page_Up,     kscrollup,      {.i = -1} },
-	{ ShiftMask,       XK_Page_Down,   kscrolldown,    {.i = -1} },
-	{ ShiftMask,       XF86XK_Forward, kscrollup,      {.i = -1} },
-	{ ShiftMask,       XF86XK_Back,    kscrolldown,    {.i = -1} },
-	{ TERMMOD,         XK_Return,      newterm,        {.i =  0} },
-	{ MODKEY,          XK_c,           externalpipe,   {.v = copyoutput } },
-	{ MODKEY,          XK_e,           externalpipe,   {.v = editoutput } },
+	/* mask           keysym           function        argument */
+	{ XK_ANY_MOD,     XK_Break,        sendbreak,      {.i =  0} },
+	{ ControlMask,    XK_Print,        toggleprinter,  {.i =  0} },
+	{ ShiftMask,      XK_Print,        printscreen,    {.i =  0} },
+	{ XK_ANY_MOD,     XK_Print,        printsel,       {.i =  0} },
+	{ TERMMOD,        XK_Prior,        zoom,           {.f = +1} },
+	{ TERMMOD,        XK_Next,         zoom,           {.f = -1} },
+	{ TERMMOD,        XK_Home,         zoomreset,      {.f =  0} },
+	{ MODKEY,         XK_y,            clipcopy,       {.i =  0} },
+	{ MODKEY,         XK_p,            clippaste,      {.i =  0} },
+	{ TERMMOD,        XK_P,            selpaste,       {.i =  0} },
+	{ ShiftMask,      XK_Insert,       selpaste,       {.i =  0} },
+	{ TERMMOD,        XK_Num_Lock,     numlock,        {.i =  0} },
+	{ TERMMOD,        XK_K,            kscrollup,      {.i =  4} },
+	{ TERMMOD,        XK_J,            kscrolldown,    {.i =  4} },
+	{ ShiftMask,      XK_Page_Up,      kscrollup,      {.i = -1} },
+	{ ShiftMask,      XK_Page_Down,    kscrolldown,    {.i = -1} },
+	{ ShiftMask,      XF86XK_Forward,  kscrollup,      {.i = -1} },
+	{ ShiftMask,      XF86XK_Back,     kscrolldown,    {.i = -1} },
+	{ TERMMOD,        XK_Return,       newterm,        {.i =  0} },
+	{ MODKEY,         XK_c,            externalpipe,   {.v = pipecopy  } },
+	{ MODKEY,         XK_e,            externalpipe,   {.v = pipedump  } },
+	{ MODKEY,         XK_z,            externalpipe,   {.v = pipedebug } },
 };
 
 /*
