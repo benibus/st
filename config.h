@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "DroidSansMonoSlashed Nerd Font:pixelsize=12:antialias=true:autohint=true";
+static char *font = "monospace:size=9:antialias=true:autohint=true";
 static int borderpx = 2;
 char *externalpipe_sigusr1[] = {"/bin/sh", "-c", "extpipe-buffer.sh st_strings_read"};
 
